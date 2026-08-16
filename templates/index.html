@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Posting Fraud Detector — Case File Analysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="grain-overlay"></div>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="folder-tab">
+      <span class="case-no">CASE FILE №&nbsp;{{ metrics.dataset.total_postings if metrics else '——' }}</span>
+    </div>
+    <h1 class="title">
+      <span class="title-line">Job Posting</span>
+      <span class="title-line title-accent">Fraud&nbsp;Examiner</span>
+    </h1>
+    <p class="subtitle">Paste a listing below. The examiner reads it the way a fraud investigator would —
+      flagging the phrases, patterns, and tells that separate a real offer from a scam.</p>
+  </div>
+</header>
+
+<main class="desk">
+
+  <section class="intake-card" aria-label="Submit a posting for analysis">
+    <div class="paperclip" aria-hidden="true">
+      <svg viewBox="0 0 24 48" class="paperclip-svg"><path d="M6 10 L6 34 A6 6 0 0 0 18 34 L18 8 A4 4 0 0 0 10 8 L10 30 A2 2 0 0 0 14 30 L14 12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </div>
+
+    <label for="posting-input" class="intake-label">
+      <span class="stamp-mono">EXHIBIT A</span> — Paste the full job posting
+    </label>
+    <textarea id="posting-input" placeholder="Paste the job title, company description, responsibilities, requirements, and any salary/benefits info here. The more complete, the sharper the reading..."></textarea>
+
+    <div class="intake-footer">
+      <span id="char-count" class="char-count">0 characters</span>
+      <button id="analyze-btn" class="stamp-btn">
+        <span class="stamp-btn-label">Examine Posting</span>
+      </button>
+    </div>
+    <p id="error-msg" class="error-msg" hidden></p>
+  </section>
+
+  <section id="verdict-section" class="verdict-section" hidden>
+
+    <div class="verdict-row">
+      <div id="verdict-stamp" class="verdict-stamp">
+        <span id="verdict-text">LEGITIMATE</span>
+      </div>
+      <div class="verdict-meta">
+        <div class="meta-row">
+          <span class="meta-label">Confidence</span>
+          <div class="confidence-track"><div id="confidence-fill" class="confidence-fill"></div></div>
+          <span id="confidence-value" class="meta-value">—%</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Fraud probability</span>
+          <span id="fraud-prob-value" class="meta-value mono">—%</span>
+        </div>
+        <p class="meta-note">Read by Claude directly, in context — not scored against a fixed word list,
+          so it can catch scam patterns beyond the original training set.</p>
+      </div>
+    </div>
+
+    <div class="evidence-block">
+      <h2 class="section-heading"><span class="stamp-mono">EXHIBIT B</span> — Examiner's notes</h2>
+      <p id="reasoning-text" class="reasoning-text"></p>
+    </div>
+
+    <div class="evidence-block">
+      <h2 class="section-heading"><span class="stamp-mono">EXHIBIT C</span> — Red flags identified</h2>
+      <ul id="red-flags-list" class="red-flags-list"></ul>
+    </div>
+
+    <div class="evidence-block">
+      <h2 class="section-heading"><span class="stamp-mono">EXHIBIT D</span> — Terms that stood out</h2>
+      <div id="evidence-tags" class="evidence-tags"></div>
+    </div>
+
+    <div class="evidence-block">
+      <h2 class="section-heading"><span class="stamp-mono">EXHIBIT E</span> — Posting with evidence marked</h2>
+      <div id="annotated-text" class="annotated-text"></div>
+    </div>
+  </section>
+
+  <aside class="sidebar">
+    <div class="index-card">
+      <h3 class="index-card-title">How This Works</h3>
+      <p class="index-card-footnote">Each posting is read by Claude (Anthropic's AI model), which reasons
+        about the text directly — the company, the pay, the requests it makes of you — the way a human
+        fraud examiner would, rather than matching it against fixed patterns from an old dataset.</p>
+      {% if metrics %}
+      <dl class="stat-list">
+        <div class="stat-row">
+          <dt>Reference dataset</dt>
+          <dd class="mono">{{ "{:,}".format(metrics.dataset.total_postings) }} postings</dd>
+        </div>
+        <div class="stat-row">
+          <dt>Confirmed fraudulent</dt>
+          <dd class="mono">{{ metrics.dataset.fraudulent_pct }}%</dd>
+        </div>
+      </dl>
+      {% endif %}
+    </div>
+
+    <div class="index-card tell-card">
+      <h3 class="index-card-title">Common Tells</h3>
+      <ul class="tell-list">
+        <li>Vague company details, no verifiable address</li>
+        <li>Salary far above market for the stated role</li>
+        <li>Asks for bank details, SSN, or fees up front</li>
+        <li>Urgency to respond or "act now" language</li>
+        <li>Interview conducted only by chat, no video call</li>
+      </ul>
+    </div>
+  </aside>
+
+</main>
+
+<footer class="case-footer">
+  <p>Analysis powered by the Claude API (Anthropic). This is an AI-generated estimate, not a verdict —
+    always verify a listing independently before applying or sharing personal information.</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
