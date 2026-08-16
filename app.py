@@ -1,9 +1,5 @@
 """
-Job Posting Fraud Examiner — Flask web app.
-
-Analysis is powered by the Claude API (see ai_analyzer.py) instead of a
-locally trained model, so it can reason about a posting directly rather
-than relying on word patterns from an older training set.
+Job Posting Fraud Examiner 
 
 Run:
     python app.py
