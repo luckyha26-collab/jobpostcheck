@@ -19,7 +19,7 @@ from groq import Groq
 load_dotenv()
 
 
-MODEL = "llama-3.1-8b-instant"
+model="openai/gpt-oss-120b"
 
 
 SYSTEM_PROMPT = """
