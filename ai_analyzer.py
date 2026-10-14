@@ -19,7 +19,7 @@ from groq import Groq
 load_dotenv()
 
 
-model="openai/gpt-oss-120b"
+MODEL = "openai/gpt-oss-120b"
 
 
 SYSTEM_PROMPT = """
